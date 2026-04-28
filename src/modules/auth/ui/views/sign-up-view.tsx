@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { z } from "zod";
@@ -21,24 +20,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { FieldGroup } from "@/components/ui/field";
 import { useForm, zodResolver } from "@/lib/simple-form";
+import { useRouter } from "next/navigation";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 
-const formSchema = z.object({
+const formSchema = z
+  .object({
     name: z.string().min(1, { message: "Name is required" }),
-  email: z.string().email(),
-  password: z.string().min(1, { message: "Password is required" }),
-  confirmPassword: z.string().min(1, { message: "Password is required" }),
-}).refine((data) => data.password === data.confirmPassword, {
+    email: z.string().email(),
+    password: z.string().min(1, { message: "Password is required" }),
+    confirmPassword: z.string().min(1, { message: "Password is required" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
-    path: ["confirmPassword"]
-});
+    path: ["confirmPassword"],
+  });
 export const SignUpView = () => {
   const router = useRouter();
+
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        name: "",
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -54,6 +58,7 @@ export const SignUpView = () => {
         name: data.name,
         email: data.email,
         password: data.password,
+        callbackURL: "/"
       },
       {
         onSuccess: () => {
@@ -72,6 +77,33 @@ export const SignUpView = () => {
       },
     );
   };
+
+  const onSocial = (provider: "github" | "google") => {
+    setError(null);
+    setPending(true);
+
+    authClient.signIn.social(
+      {
+        provider: provider,
+        callbackURL: "/"
+      },
+      {
+        onSuccess: () => {
+          setPending(false)
+        },
+        onError: (error) => {
+          const message =
+            typeof error === "object" && error !== null && "message" in error
+              ? String((error as { message?: string }).message ?? "")
+              : "";
+
+          setPending(false);
+          setError(message || "Unable to sign in");
+        },
+      },
+    );
+  };
+
 
   return (
     <div className="flex flex-col gap-6">
@@ -175,7 +207,7 @@ export const SignUpView = () => {
                 )}
 
                 <Button disabled={pending} type="submit" className="w-full ">
-                  sign in
+                  sign up
                 </Button>
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                   <span className="bg-card text-muted-foreground">
@@ -188,25 +220,27 @@ export const SignUpView = () => {
                     variant="outline"
                     type="button"
                     className="w-full"
+                    onClick={() => onSocial("google")}
                   >
-                    Google
+                    <FaGoogle />
                   </Button>
                   <Button
                     disabled={pending}
                     variant="outline"
                     type="button"
                     className="w-full"
+                    onClick={() => onSocial("github")}
                   >
-                    GitHub
+                    <FaGithub />
                   </Button>
                 </div>
                 <div className="text-center text-sm">
                   Already have an account?{" "}
                   <Link
-                    href="/sign-up"
+                    href="/sign-in"
                     className="underline underline-offset-4"
                   >
-                    Sign in 
+                    Sign in
                   </Link>
                 </div>
               </FieldGroup>

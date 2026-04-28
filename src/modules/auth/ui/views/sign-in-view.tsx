@@ -21,6 +21,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FieldGroup } from "@/components/ui/field";
 import { useForm, zodResolver } from "@/lib/simple-form";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -46,6 +47,7 @@ export const SignInView = () => {
       {
         email: data.email,
         password: data.password,
+        callbackURL: "/"
       },
       {
         onSuccess: () => {
@@ -65,6 +67,31 @@ export const SignInView = () => {
     );
   };
 
+  const onSocial = (provider: "github" | "google") => {
+      setError(null);
+      setPending(true);
+  
+      authClient.signIn.social(
+        {
+          provider: provider,
+          callbackURL: "/"
+        },
+        {
+          onSuccess: () => {
+            setPending(false);
+          },
+          onError: (error) => {
+            const message =
+              typeof error === "object" && error !== null && "message" in error
+                ? String((error as { message?: string }).message ?? "")
+                : "";
+  
+            setPending(false);
+            setError(message || "Unable to sign in");
+          },
+        },
+      );
+    };
   return (
     <div className="flex flex-col gap-6">
       <Card className="overflow-hidden p-0">
@@ -139,17 +166,19 @@ export const SignInView = () => {
                     disabled={pending}
                     variant="outline"
                     type="button"
+                    onClick={() => onSocial("google")}
                     className="w-full"
                   >
-                    Google
+                    <FaGoogle />
                   </Button>
                   <Button
                     disabled={pending}
                     variant="outline"
                     type="button"
+                    onClick={() => onSocial("github")}
                     className="w-full"
                   >
-                    GitHub
+                    <FaGithub />
                   </Button>
                 </div>
                 <div className="text-center text-sm">
