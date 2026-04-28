@@ -1,9 +1,8 @@
+import { SignInView } from '@/modules/auth/ui/views/sign-in-view'
 import React from 'react'
 
 const SignIn = () => {
-  return (
-    <div>SignIn</div>
-  )
+  return <SignInView />
 }
 
 export default SignIn
