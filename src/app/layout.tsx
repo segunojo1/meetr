@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { DashboardNavbar } from "@/modules/dashboard/ui/components/dashboard-navbar";
+import { TRPCReactProvider } from "@/trpc/client";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -19,14 +20,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.className} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        {/* <DashboardNavbar /> */}
-        {children}
-      </body>
-    </html>
+    <TRPCReactProvider>
+      <html lang="en" className={`${inter.className} h-full antialiased`}>
+        <body className="min-h-full flex flex-col">
+          {/* <DashboardNavbar /> */}
+          {children}
+        </body>
+      </html>
+    </TRPCReactProvider>
   );
 }
