@@ -10,8 +10,11 @@ import { getQueryClient, trpc } from "@/trpc/server";
 
 import { loadSearchParams } from "@/modules/meetings/params";
 import { MeetingsListHeader } from "@/modules/meetings/ui/components/meetings-list-header";
-import { MeetingsView, MeetingsViewError, MeetingsViewLoading } from "@/modules/meetings/views/meetings-view";
-
+import {
+  MeetingsView,
+  MeetingsViewError,
+  MeetingsViewLoading,
+} from "@/modules/meetings/ui/views/meetings-view";
 
 interface Props {
   searchParams: Promise<SearchParams>;
@@ -32,7 +35,7 @@ const Page = async ({ searchParams }: Props) => {
   void queryClient.prefetchQuery(
     trpc.meetings.getMany.queryOptions({
       ...filters,
-    })
+    }),
   );
 
   return (
@@ -48,5 +51,5 @@ const Page = async ({ searchParams }: Props) => {
     </>
   );
 };
- 
+
 export default Page;
