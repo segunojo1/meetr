@@ -6,10 +6,11 @@ import { useForm, zodResolver } from "@/lib/simple-form";
 import z from "zod";
 import { agentsInsertSchema } from "../../schemas";
 import { GeneratedAvatar } from "@/components/generated-avatar";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 interface AgentFormProps {
     onSuccess?: () => void;
@@ -23,19 +24,17 @@ export const AgentForm = ({
     initialValues
 }: AgentFormProps) => {
     const trpc = useTRPC();
-    const router = useRouter();
-
     const queryClient = useQueryClient();
 
     const createAgent = useMutation(
         trpc.agents.create.mutationOptions({
-            onSuccess: () => {
-                queryClient.invalidateQueries(
+            onSuccess: async () => {
+                await queryClient.invalidateQueries(
                     trpc.agents.getMany.queryOptions()
                 );
 
                 if (initialValues?.id) {
-                    queryClient.invalidateQueries(
+                    await queryClient.invalidateQueries(
                         trpc.agents.getOne.queryOptions({ id: initialValues.id })
                     )                        
                 }
@@ -81,6 +80,7 @@ export const AgentForm = ({
                         <FormControl>
                             <Input {...field} placeholder="e.g. Math tutor" />
                         </FormControl>
+                        <FormMessage />
                     </FormItem>
                 )}/>
 
@@ -88,8 +88,9 @@ export const AgentForm = ({
                     <FormItem>
                         <FormLabel>Instructions</FormLabel>
                         <FormControl>
-                            <Input {...field} placeholder="e.g. Math tutor" />
+                            <Textarea {...field} placeholder="You are a helpful assistant that can answerquestions and help with assignments" />
                         </FormControl>
+                        <FormMessage />
                     </FormItem>
                 )}/>
 
