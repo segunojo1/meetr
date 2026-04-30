@@ -15,7 +15,7 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 interface Props {
-  searchParams: Promise<SearchParams>
+  searchParams: Promise<SearchParams>;
 }
 
 const Page = async ({ searchParams }: Props) => {
@@ -29,9 +29,11 @@ const Page = async ({ searchParams }: Props) => {
   }
 
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions({
-    ...filters
-  }));
+  void queryClient.prefetchQuery(
+    trpc.agents.getMany.queryOptions({
+      ...filters,
+    }),
+  );
 
   return (
     <>

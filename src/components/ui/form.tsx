@@ -15,7 +15,7 @@ function Form<TValues extends Record<string, string>>({
   ...form
 }: React.PropsWithChildren<UseFormReturn<TValues>>) {
   return (
-    <FormContext.Provider value={form as FormContextValue}>
+    <FormContext.Provider value={form as unknown as FormContextValue}>
       {children}
     </FormContext.Provider>
   );
@@ -27,9 +27,11 @@ type FormFieldProps<TValues extends Record<string, string>> = {
   render: (props: {
     field: {
       name: keyof TValues & string;
-      value: TValues[keyof TValues & string];
+      value: string;
       onChange: (
-        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+        event:
+          | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          | string,
       ) => void;
       onBlur: () => void;
       ref: React.RefCallback<HTMLInputElement | HTMLTextAreaElement>;
@@ -65,7 +67,12 @@ function FormField<TValues extends Record<string, string>>({
           name,
           value: form.control.values[name] ?? "",
           onChange: (event) => {
-            form.control.setValue(name, event.target.value as TValues[keyof TValues & string]);
+            const value =
+              typeof event === "string"
+                ? event
+                : event.target.value;
+
+            form.control.setValue(name, value);
           },
           onBlur: () => undefined,
           ref: () => undefined,

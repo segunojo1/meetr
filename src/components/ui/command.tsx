@@ -74,6 +74,7 @@ function CommandResponsiveDialog({
   title = "Command Palette",
   description = "Search for a command to run...",
   children,
+  shouldFilter = true,
   className,
   showCloseButton = false,
   ...props
@@ -81,6 +82,7 @@ function CommandResponsiveDialog({
   title?: string;
   description?: string;
   className?: string;
+  shouldFilter?: boolean;
   showCloseButton?: boolean;
 }) {
   const isMobile = useIsMobile();
@@ -93,7 +95,7 @@ function CommandResponsiveDialog({
             <DrawerTitle>{title}</DrawerTitle>
             <DrawerDescription>{description}</DrawerDescription>
           </DrawerHeader>
-          <Command>{children}</Command>
+          <Command shouldFilter={shouldFilter}>{children}</Command>
         </DrawerContent>
       </Drawer>
     );
@@ -111,7 +113,7 @@ function CommandResponsiveDialog({
         )}
         showCloseButton={showCloseButton}
       >
-        {children}
+        <Command shouldFilter={shouldFilter}>{children}</Command>
       </DialogContent>
     </Dialog>
   );
