@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
       await realtimeClient.updateSession({
         instructions: existingAgent.instructions,
         modalities: ["text", "audio"],
-        model: "gpt-4o-mini-realtime-preview-2024-12-17",
+        model: "gpt-4o-realtime-preview-2024-12-17",
         voice: "alloy",
       });
 
