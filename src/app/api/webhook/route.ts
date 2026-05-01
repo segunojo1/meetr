@@ -99,17 +99,22 @@ export async function POST(req: NextRequest) {
         call,
         openAiApiKey: process.env.OPENAI_API_KEY!,
         agentUserId: existingAgent.id,
+        model: "gpt-4o-realtime-preview-2024-12-17",
       });
 
-      // Wait a moment for the connection to stabilize
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Update session with agent instructions and full audio configuration
       await realtimeClient.updateSession({
         instructions: existingAgent.instructions,
         modalities: ["text", "audio"],
-        model: "gpt-4o-realtime-preview-2024-12-17",
         voice: "alloy",
+        input_audio_transcription: {
+          model: "whisper-1",
+        },
+        turn_detection: {
+          type: "server_vad",
+          threshold: 0.5,
+          prefix_padding_ms: 300,
+          silence_duration_ms: 500,
+        },
       });
 
       console.log(`[Webhook] OpenAI Realtime connection established for meeting ${meetingId} with agent ${existingAgent.id}`);
