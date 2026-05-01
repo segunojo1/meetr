@@ -31,6 +31,10 @@ export default function Home() {
               View meetings
             </Link>
           </div>
+
+          <p className="mt-4 text-sm text-slate-500">
+            Update: chatting with agents in meetings is working again. YAYY!!!
+          </p>
         </section>
       </div>
     </main>
