@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { TRPCReactProvider } from "@/trpc/client";
 import { Toaster } from "@/components/ui/sonner";
+import { TopLoader } from "@/components/top-loader";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -24,6 +25,7 @@ export default function RootLayout({
       <TRPCReactProvider>
         <html lang="en" className={`${inter.className} h-full antialiased`}>
           <body className="min-h-full flex flex-col">
+            <TopLoader />
             {/* <DashboardNavbar /> */}
             <Toaster />
             {children}
