@@ -50,7 +50,8 @@ function FormField<TValues extends Record<string, string>>({
   name,
   render,
 }: FormFieldProps<TValues>) {
-  const form = React.useContext(FormContext) ?? (control as FormContextValue | undefined);
+  const form =
+    React.useContext(FormContext) ?? (control as FormContextValue | undefined);
 
   if (!form) {
     throw new Error("FormField must be used within a Form");
@@ -68,9 +69,7 @@ function FormField<TValues extends Record<string, string>>({
           value: form.control.values[name] ?? "",
           onChange: (event) => {
             const value =
-              typeof event === "string"
-                ? event
-                : event.target.value;
+              typeof event === "string" ? event : event.target.value;
 
             form.control.setValue(name, value);
           },
@@ -89,7 +88,12 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function FormLabel({ className, ...props }: React.ComponentProps<"label">) {
-  return <label className={cn("text-sm font-medium leading-none", className)} {...props} />;
+  return (
+    <label
+      className={cn("text-sm font-medium leading-none", className)}
+      {...props}
+    />
+  );
 }
 
 function FormControl({ children }: { children: React.ReactNode }) {
@@ -110,7 +114,11 @@ function FormMessage({ className, children }: React.ComponentProps<"p">) {
     return null;
   }
 
-  return <p className={cn("text-sm text-destructive", className)}>{message ?? children}</p>;
+  return (
+    <p className={cn("text-sm text-destructive", className)}>
+      {message ?? children}
+    </p>
+  );
 }
 
 export { Form, FormControl, FormField, FormItem, FormLabel, FormMessage };

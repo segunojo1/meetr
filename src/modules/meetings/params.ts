@@ -9,7 +9,7 @@ export const filtersSearchParams = {
     .withDefault(DEFAULT_PAGE)
     .withOptions({ clearOnDefault: true }),
   status: parseAsStringEnum(Object.values(MeetingStatus)),
-        agentId: parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
+  agentId: parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
 };
 
-export const loadSearchParams = createLoader(filtersSearchParams)
+export const loadSearchParams = createLoader(filtersSearchParams);
