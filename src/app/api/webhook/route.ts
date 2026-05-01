@@ -93,15 +93,30 @@ export async function POST(req: NextRequest) {
     }
 
     const call = streamVideo.video.call("default", meetingId);
-    const realtimeClient = await streamVideo.video.connectOpenAi({
-      call,
-      openAiApiKey: process.env.OPENAI_API_KEY!,
-      agentUserId: existingAgent.id,
-    });
+    
+    try {
+      const realtimeClient = await streamVideo.video.connectOpenAi({
+        call,
+        openAiApiKey: process.env.OPENAI_API_KEY!,
+        agentUserId: existingAgent.id,
+      });
 
-    realtimeClient.updateSession({
-      instructions: existingAgent.instructions,
-    });
+      // Wait a moment for the connection to stabilize
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Update session with agent instructions and full audio configuration
+      await realtimeClient.updateSession({
+        instructions: existingAgent.instructions,
+        modalities: ["text", "audio"],
+        model: "gpt-4o-mini-realtime-preview-2024-12-17",
+        voice: "alloy",
+      });
+
+      console.log(`[Webhook] OpenAI Realtime connection established for meeting ${meetingId} with agent ${existingAgent.id}`);
+    } catch (error) {
+      console.error(`[Webhook] Failed to connect OpenAI Realtime for meeting ${meetingId}:`, error);
+      throw error;
+    }
   } else if (eventType === "call.session_participant_left") {
     const event = payload as CallSessionParticipantLeftEvent;
     const meetingId = event.call_cid.split(":")[1]; // call_cid is formatted as "type:id"
