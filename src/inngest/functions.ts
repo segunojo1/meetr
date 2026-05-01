@@ -35,18 +35,18 @@ Example:
 });
 
 export const meetingsProcessing = inngest.createFunction(
-  { id: "meetings/processing", event: "meetings/processing" },
+  { id: "meetings/processing", triggers: [{ event: "meetings/processing" }] },
   async ({ event, step }: { event: any; step: any }) => {
     const response = await step.run("fetch-transcript", async () => {
       return fetch(event.data.transcriptUrl).then((res) => res.text());
     });
 
-    const transcript = await step.run("parse-transcript", async () => {
+    const transcript = (await step.run("parse-transcript", async () => {
       return JSONL.parse<StreamTranscriptItem>(response);
-    });
+    })) as StreamTranscriptItem[];
 
     const transcriptWithSpeakers = await step.run("add-speakers", async () => {
-      const speakerIds = [
+      const speakerIds: string[] = [
         ...new Set(transcript.map((item) => item.speaker_id)),
       ];
 
