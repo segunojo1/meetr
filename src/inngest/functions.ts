@@ -35,9 +35,8 @@ Example:
 });
 
 export const meetingsProcessing = inngest.createFunction(
-  { id: "meetings/processing" },
-  { event: "meetings/processing" },
-  async ({ event, step }) => {
+  { id: "meetings/processing", event: "meetings/processing" },
+  async ({ event, step }: { event: any; step: any }) => {
     const response = await step.run("fetch-transcript", async () => {
       return fetch(event.data.transcriptUrl).then((res) => res.text());
     });
