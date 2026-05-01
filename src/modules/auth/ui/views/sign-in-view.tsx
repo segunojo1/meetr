@@ -162,7 +162,7 @@ export const SignInView = () => {
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <Button
+                  {/* <Button
                     disabled={pending}
                     variant="outline"
                     type="button"
@@ -170,7 +170,7 @@ export const SignInView = () => {
                     className="w-full"
                   >
                     <FaGoogle />
-                  </Button>
+                  </Button> */}
                   <Button
                     disabled={pending}
                     variant="outline"

@@ -215,7 +215,7 @@ export const SignUpView = () => {
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <Button
+                  {/* <Button
                     disabled={pending}
                     variant="outline"
                     type="button"
@@ -223,7 +223,7 @@ export const SignUpView = () => {
                     onClick={() => onSocial("google")}
                   >
                     <FaGoogle />
-                  </Button>
+                  </Button> */}
                   <Button
                     disabled={pending}
                     variant="outline"
